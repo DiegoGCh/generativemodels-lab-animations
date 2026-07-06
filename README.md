@@ -242,6 +242,21 @@ Each prints a PASS/FAIL line per check and saves a diagnostic PNG to `outputs/`.
 
 ---
 
+## Model Architecture
+
+Both ScoreNet (diffusion) and VelocityNet (flow matching) use the following architecture:
+
+- 4 hidden layers x 512 neurons, SiLU activation
+- Random Fourier Features on the spatial input x (64 frequencies, sigma=1.0) to help the MLP represent high-frequency spatial structure
+- Sinusoidal time embedding (dim=128)
+- Input dimension: 128 (Fourier features) + 128 (time) = 256
+
+The diffusion trainer uses min-SNR loss weighting (gamma=5) to balance gradient contributions across noise levels, which noticeably improved the bimodal structure recovery in the Probability Flow ODE (animation 6).
+
+Flow Matching did not benefit from these changes alone. Improving FM sample quality would require Optimal Transport coupling (OT-CFM) to avoid trajectory crossings.
+
+---
+
 ## Notes
 
 - Checkpoints and output files are included in the repo. You can run animations 4-8 directly using the provided checkpoints without retraining.
