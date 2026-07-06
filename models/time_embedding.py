@@ -3,6 +3,24 @@ import torch.nn as nn
 import math
 
 
+class FourierFeatures(nn.Module):
+    """Random Fourier Features for spatial input x.
+
+    Projects x through fixed random frequencies so the MLP can represent
+    high-frequency spatial structure (thin arcs, sharp boundaries) that
+    plain MLPs miss due to spectral bias.
+    """
+
+    def __init__(self, in_dim: int = 2, n_freqs: int = 64, sigma: float = 1.0):
+        super().__init__()
+        B = torch.randn(in_dim, n_freqs) * sigma
+        self.register_buffer("B", B)
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        proj = x @ self.B  # (batch, n_freqs)
+        return torch.cat([torch.sin(proj), torch.cos(proj)], dim=-1)  # (batch, 2*n_freqs)
+
+
 class SinusoidalEmbedding(nn.Module):
     """Maps t in [0,1] to vector of dim `dim` via log-spaced Fourier features."""
 
