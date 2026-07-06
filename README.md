@@ -32,7 +32,6 @@ pip install -r requirements.txt
 │   └── preview.py       # Preview utility: saves 5 keyframe PNGs instead of full MP4
 ├── main.py              # CLI entry point
 ├── requirements.txt
-└── context.md           # Theoretical background and design decisions
 ```
 
 ---
