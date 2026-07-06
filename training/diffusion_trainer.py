@@ -34,13 +34,17 @@ class DiffusionTrainer:
 
         pred = self.model(xt, t)
 
+        # min-SNR weighting: weight = min(SNR(t), gamma), gamma=5
+        snr = (self.process.m(t).pow(2) / self.process.sigma(t).pow(2).clamp(min=1e-8)).unsqueeze(-1)
+        weight = torch.minimum(snr, torch.full_like(snr, 5.0))
+
         if self.model.parametrization == "epsilon":
-            loss = (pred - epsilon).pow(2).mean()
+            loss = (weight * (pred - epsilon).pow(2)).mean()
         elif self.model.parametrization == "v":
             a_t = self.process.m(t).unsqueeze(-1)
             b_t = self.process.sigma(t).unsqueeze(-1)
             v_target = a_t * epsilon - b_t * x0
-            loss = (pred - v_target).pow(2).mean()
+            loss = (weight * (pred - v_target).pow(2)).mean()
         else:
             raise ValueError(f"Unknown parametrization: {self.model.parametrization}")
 
