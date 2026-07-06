@@ -1,0 +1,8 @@
+batch_size: 4096
+distribution: two_moons
+lr: 0.0003
+n_epochs: 2000
+parametrization: epsilon
+process: VPProcess
+seed: 42
+t_eps: 1.0e-05

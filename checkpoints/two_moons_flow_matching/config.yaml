@@ -1,0 +1,6 @@
+batch_size: 4096
+distribution: two_moons
+lr: 0.0003
+model: flow_matching
+n_epochs: 2000
+seed: 42
