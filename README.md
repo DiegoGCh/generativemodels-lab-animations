@@ -70,7 +70,7 @@ All animations write to `outputs/`. Use `--preview` to generate 5 keyframe PNGs 
 
 ### Animation 1: Forward Process Comparison
 
-Shows VP, VE, and Sub-VP side by side as t goes from 0 to 1. No model required.
+Three panels (VP, VE, Sub-VP) running in parallel as t goes from 0 to 1. VP spreads particles into a unit Gaussian. VE adds noise without drift so variance explodes and particles fly off-screen by t=1. Sub-VP uses the same drift as VP but less diffusion, so it spreads more slowly. No model required.
 
 ```bash
 python main.py animate \
@@ -82,7 +82,7 @@ python main.py animate \
 
 ### Animation 2: Density Evolution
 
-KDE density of two distributions evolving over time under a single forward SDE.
+KDE density of two distributions (two_moons and eight_gaussians) evolving under the same forward SDE. Both start as their true shape at t=0 and smear into a centered Gaussian blob by t=1, showing that the forward process drives any distribution toward the same prior regardless of its initial shape.
 
 ```bash
 python main.py animate \
@@ -94,7 +94,7 @@ python main.py animate \
 
 ### Animation 3: Forward Trajectories
 
-True Euler-Maruyama particle paths from t=0 to t=1.
+Each colored line is a single particle following a true Euler-Maruyama forward SDE path from t=0 to t=1. Paths start on the two_moons arcs and diffuse outward with visible stochastic wiggle, showing that SDE paths are continuous but random, not straight lines.
 
 ```bash
 python main.py animate \
@@ -106,7 +106,7 @@ python main.py animate \
 
 ### Animation 4: Score Field
 
-Learned score field s(x,t) on a grid, animated as t varies from 0.05 to 1.00.
+Red arrows show the learned score field s(x,t) evaluated on a uniform grid, animated as t goes from 0.05 to 1.00. At small t the arrows near the data point toward regions of higher density. At t=1 the score of an isotropic Gaussian is -x, so all arrows point toward the origin.
 
 ```bash
 python main.py animate \
@@ -120,7 +120,7 @@ python main.py animate \
 
 ### Animation 5: Reverse SDE (Euler-Maruyama)
 
-Denoising via reverse-time SDE. Particles start from the Gaussian prior and step backward to t=0.
+800 particles start from the Gaussian prior at t=1 and are denoised backward to t=0 using the reverse-time SDE. Orange lines trace the stochastic paths. Because the reverse SDE injects noise at every step (same diffusion coefficient as the forward process), the final samples are more spread out than the ODE version. The result is intentionally noisier than Animation 6 — that contrast is the point.
 
 ```bash
 python main.py animate \
@@ -135,7 +135,7 @@ python main.py animate \
 
 ### Animation 6: Probability Flow ODE
 
-Same denoising goal as Animation 5, but deterministic. Uses Heun integrator (2nd order).
+Same denoising goal as Animation 5 but using the deterministic ODE version of the reverse process. No noise is injected, so paths are smooth green curves and the two-mode structure of the data is clearly recovered at t=0. Uses the Heun (2nd order) integrator.
 
 ```bash
 python main.py animate \
@@ -151,7 +151,7 @@ python main.py animate \
 
 ### Animation 7: Flow Matching
 
-Particle transport from Gaussian to data using the learned velocity field. Independent of any diffusion process.
+Completely independent of diffusion. 800 particles start from a Gaussian at t=0 and are transported toward the data distribution at t=1 by integrating the learned velocity field. Pink arrows show the velocity field at each step. Because Flow Matching trains on straight-line interpolations between noise and data, paths are visually straighter than diffusion ODE paths.
 
 ```bash
 python main.py animate \
@@ -164,7 +164,7 @@ python main.py animate \
 
 ### Animation 8: Step Count Comparison
 
-Five panels comparing N = 10, 25, 50, 100, 250 integration steps side by side. Shows the effect of discretization on sample quality.
+Five panels side by side running the same sampler with N = 10, 25, 50, 100, 250 integration steps from the same initial noise. With N=10 discretization error accumulates and samples are blurrier or more scattered. As N increases the samples converge to a stable distribution. Shows the trade-off between compute cost and sample quality.
 
 For diffusion (Probability Flow ODE):
 
