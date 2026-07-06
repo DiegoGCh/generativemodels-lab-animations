@@ -1,6 +1,7 @@
 """Bloque 2 smoke test: forward pass + predict_score."""
 import sys
-sys.path.insert(0, r"C:\Users\dguer\Desktop\Ciclo2026_1\GenerativeModels\Lab3")
+import os
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import torch
 from processes import VPProcess
@@ -70,5 +71,6 @@ sy = score_grid[:, 1].reshape(30, 30).numpy()
 ax.quiver(xx.numpy(), yy.numpy(), sx, sy, alpha=0.7)
 ax.set_title("Untrained score field (noise, but no NaN)")
 plt.tight_layout()
-plt.savefig(r"C:\Users\dguer\Desktop\Ciclo2026_1\GenerativeModels\Lab3\outputs\smoke_b2_score_grid.png", dpi=80)
+os.makedirs("outputs", exist_ok=True)
+plt.savefig(os.path.join("outputs", "smoke_b2_score_grid.png"), dpi=80)
 print("\nSmoke test B2: ALL PASS")

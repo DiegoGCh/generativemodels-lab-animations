@@ -1,6 +1,7 @@
 """Bloque 0 smoke test: verify all 6 distributions."""
 import sys
-sys.path.insert(0, r"C:\Users\dguer\Desktop\Ciclo2026_1\GenerativeModels\Lab3")
+import os
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import torch
 import matplotlib
@@ -24,6 +25,7 @@ for i, (dist, ax) in enumerate(zip(dists, axes)):
     print(f"  [{i+1}/6] {dist.name}: shape={tuple(s.shape)}, range=[{s.min():.2f}, {s.max():.2f}] PASS")
 
 plt.tight_layout()
-plt.savefig(r"C:\Users\dguer\Desktop\Ciclo2026_1\GenerativeModels\Lab3\outputs\smoke_b0_distributions.png", dpi=100)
+os.makedirs("outputs", exist_ok=True)
+plt.savefig(os.path.join("outputs", "smoke_b0_distributions.png"), dpi=100)
 print("\nSmoke test B0: ALL PASS")
 print("Plot saved to outputs/smoke_b0_distributions.png")

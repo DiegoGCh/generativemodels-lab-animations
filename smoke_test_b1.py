@@ -1,6 +1,7 @@
 """Bloque 1 smoke test: forward process at 5 time steps."""
 import sys
-sys.path.insert(0, r"C:\Users\dguer\Desktop\Ciclo2026_1\GenerativeModels\Lab3")
+import os
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import torch
 import matplotlib
@@ -57,6 +58,7 @@ for proc, pname in zip(processes, proc_names):
     print(f"  {pname} sigma(T=1): {s1:.4f}")
 
 plt.tight_layout()
-plt.savefig(r"C:\Users\dguer\Desktop\Ciclo2026_1\GenerativeModels\Lab3\outputs\smoke_b1_forward.png", dpi=80)
+os.makedirs("outputs", exist_ok=True)
+plt.savefig(os.path.join("outputs", "smoke_b1_forward.png"), dpi=80)
 print("\nSmoke test B1: ALL PASS")
 print("Plot saved to outputs/smoke_b1_forward.png")

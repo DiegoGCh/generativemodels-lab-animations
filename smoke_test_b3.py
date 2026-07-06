@@ -1,9 +1,9 @@
 """Bloque 3 smoke test: 500 epochs training, loss drops, checkpoint round-trip, score grid."""
 import sys
-sys.path.insert(0, r"C:\Users\dguer\Desktop\Ciclo2026_1\GenerativeModels\Lab3")
+import os
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import torch
-import os
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -29,7 +29,7 @@ assert losses_diff[0] > losses_diff[-1], f"Loss did not drop! {losses_diff[0]:.4
 print(f"  Loss drop: {losses_diff[0]:.4f} -> {losses_diff[-1]:.4f} PASS")
 
 # Checkpoint save + reload
-ckpt = r"C:\Users\dguer\Desktop\Ciclo2026_1\GenerativeModels\Lab3\checkpoints\two_moons_diffusion_vp_epsilon"
+ckpt = os.path.join("checkpoints", "two_moons_diffusion_vp_epsilon")
 trainer_diff.save(ckpt)
 
 # Reload and verify identical weights
@@ -66,7 +66,8 @@ ax.scatter(data_pts[:, 0].numpy(), data_pts[:, 1].numpy(), s=3, alpha=0.3, c="bl
 ax.quiver(xx.numpy(), yy.numpy(), sx, sy, alpha=0.7, color="red")
 ax.set_title("Score field at t=0.1 (500 epoch VP)")
 plt.tight_layout()
-plt.savefig(r"C:\Users\dguer\Desktop\Ciclo2026_1\GenerativeModels\Lab3\outputs\smoke_b3_score_field.png", dpi=80)
+os.makedirs("outputs", exist_ok=True)
+plt.savefig(os.path.join("outputs", "smoke_b3_score_field.png"), dpi=80)
 
 # ---- 2. Flow Matching ----
 print("\n--- Flow Matching ---")
@@ -78,7 +79,7 @@ losses_fm = trainer_fm.train(log_every=100)
 assert losses_fm[0] > losses_fm[-1], f"FM Loss did not drop! {losses_fm[0]:.4f} -> {losses_fm[-1]:.4f}"
 print(f"  FM Loss drop: {losses_fm[0]:.4f} -> {losses_fm[-1]:.4f} PASS")
 
-ckpt_fm = r"C:\Users\dguer\Desktop\Ciclo2026_1\GenerativeModels\Lab3\checkpoints\two_moons_flow_matching"
+ckpt_fm = os.path.join("checkpoints", "two_moons_flow_matching")
 trainer_fm.save(ckpt_fm)
 print("  FM checkpoint saved PASS")
 

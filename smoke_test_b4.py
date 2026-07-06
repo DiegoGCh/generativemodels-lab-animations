@@ -1,6 +1,7 @@
 """Bloque 4 smoke test: all 3 samplers produce correct trajectory shapes."""
 import sys
-sys.path.insert(0, r"C:\Users\dguer\Desktop\Ciclo2026_1\GenerativeModels\Lab3")
+import os
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import torch
 import matplotlib
@@ -21,9 +22,8 @@ n_particles = 500
 n_steps = 100
 
 # Load or train diffusion model (VP epsilon)
-ckpt_diff = r"C:\Users\dguer\Desktop\Ciclo2026_1\GenerativeModels\Lab3\checkpoints\two_moons_diffusion_vp_epsilon"
+ckpt_diff = os.path.join("checkpoints", "two_moons_diffusion_vp_epsilon")
 model_diff = ScoreNet(process, parametrization="epsilon")
-import os
 if os.path.exists(os.path.join(ckpt_diff, "model.pt")):
     DiffusionTrainer.load_model(model_diff, ckpt_diff, device=device)
     print("  Loaded diffusion checkpoint")
@@ -37,7 +37,7 @@ model_diff = model_diff.to(device)
 model_diff.eval()
 
 # Load or train FM model
-ckpt_fm = r"C:\Users\dguer\Desktop\Ciclo2026_1\GenerativeModels\Lab3\checkpoints\two_moons_flow_matching"
+ckpt_fm = os.path.join("checkpoints", "two_moons_flow_matching")
 fm_model = VelocityNet()
 if os.path.exists(os.path.join(ckpt_fm, "model.pt")):
     FlowMatchingTrainer.load_model(fm_model, ckpt_fm, device=device)
@@ -104,6 +104,7 @@ for ax, traj, title in zip(axes,
     ax.set_aspect("equal")
     ax.set_xlim(-4, 4); ax.set_ylim(-4, 4)
 plt.tight_layout()
-plt.savefig(r"C:\Users\dguer\Desktop\Ciclo2026_1\GenerativeModels\Lab3\outputs\smoke_b4_samplers.png", dpi=80)
+os.makedirs("outputs", exist_ok=True)
+plt.savefig(os.path.join("outputs", "smoke_b4_samplers.png"), dpi=80)
 
 print("\nSmoke test B4: ALL PASS")
