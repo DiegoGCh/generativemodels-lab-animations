@@ -217,6 +217,32 @@ Output goes to `preview/`. Takes a few seconds instead of minutes.
 
 ---
 
+## Smoke Tests
+
+Each implementation block has a smoke test that verifies correctness without running a full training or animation. They are a fast way to confirm the environment is working after a fresh clone.
+
+| Script | What it checks |
+|--------|---------------|
+| `smoke_test_b0.py` | All 6 distributions sample correctly, shapes and no NaN |
+| `smoke_test_b1.py` | VP, VE, Sub-VP forward SDE at 5 time steps, prior sampling |
+| `smoke_test_b2.py` | ScoreNet and VelocityNet forward pass, predict_score output, time embedding dim |
+| `smoke_test_b3.py` | 500-epoch training loss drops, checkpoint save and reload, score grid no NaN |
+| `smoke_test_b4.py` | Euler, Heun, and Euler-Maruyama trajectory shapes and dt sign conventions |
+| `smoke_test_b5.py` | All 8 animation functions run and write MP4 files |
+| `smoke_test_b6.py` | End-to-end: train, sample, and animate in sequence |
+
+Run any of them from the project root:
+
+```bash
+python smoke_test_b0.py
+python smoke_test_b1.py
+# etc.
+```
+
+Each prints a PASS/FAIL line per check and saves a diagnostic PNG to `outputs/`. They are designed to run in under two minutes each (b3 and above require a GPU for reasonable speed).
+
+---
+
 ## Notes
 
 - Checkpoints and output files are included in the repo. You can run animations 4-8 directly using the provided checkpoints without retraining.
